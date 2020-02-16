@@ -117,3 +117,14 @@ export type RemoveFirstParam<T extends (...args: any[]) => any> = (...params: Re
 const MyFn = (a: string, b: number): void => {};
 const MyModifiedFunc: RemoveFirstParam<typeof MyFn> = (b: number): void => {};
 ```
+
+## Extract Explicit Keys from Indexed Type
+```ts
+type ExplicitKeys<T> = { [K in keyof T]: string extends K ? never : number extends K ? never : K } extends { [_ in keyof T]: infer U } ? U : never
+interface Apple {
+    [prop: string]: boolean
+    'hello': true
+    'goodbye': false
+}
+type ExplicityAppleKeys = ExplicitKeys<Apple> // 'hello' | 'goodbye'
+```
