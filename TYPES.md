@@ -16,7 +16,7 @@ const DecodeBase64 = (B64String: Base64Type): string => Buffer.from(B64String, '
 ## ResolvePromise
 Returns the type T inside of a Promise<T>.
 ```ts
-export type RemovePromise<T> = T extends Promise<infer R> ? R : never;
+export type RemovePromise<T> = T extends PromiseLike<infer R> ? R : never;
 
 /* Usage */
 const Result = Promise.resolve(0); // Promise<number>
