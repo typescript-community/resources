@@ -95,16 +95,25 @@ class A {
 type StaticProps = ClassStaticProps<typeof A>; // { b: string }
 ```
 
-## Simplify
-A debug type used to simplify deep or messy types.
+## Expand
+A debug type used to expand deep or messy types.
 ```ts
-export type Identity<T> = T;
-export type Merge_NonUnion<T> = { [k in keyof T]: T[k] };
-export type Simplify<T> = T extends Identity<T> ? Merge_NonUnion<T> : never;
+type Primitive = string | number | boolean | bigint | null | void | symbol
+type Expand<T> = T extends Primitive ? T : { [K in keyof T]: Expand<T[K]> }
 
 /* Usage */
-type SomeDeepType = { a: boolean; } & { b: boolean; } & { c: boolean; } & { d: boolean; };
-type Simplified = Simplify<SomeDeepType>; // { a: boolean; b: boolean; c: boolean; d: boolean; }
+interface Foo<T> {
+    foo: T
+}
+interface Bar {
+    a: Foo<1>
+    b: Foo<string>
+}
+interface Zip {
+    c: boolean
+}
+type Collapsed = (Bar & Zip)[] // (Bar & Zip)[]
+type Expanded = Expand<Collapsed> // type Expanded = { a: { foo: 1 }, b: { foo: string }, c: boolean }[]
 ```
 
 ## RemoveFirstParam
