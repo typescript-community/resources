@@ -147,4 +147,22 @@ export type DeepReadonly<T> = Readonly<{
         T[k] extends object ? DeepReadonly<T[k]> :
             T[k];
 }>
+
+## Pair Array to Object
+```ts
+type PairToObject<T> = T extends readonly [string, string] ? { [index in T[0]]: T[1] } : never
+type UnionToIntersection<T> = (T extends any ? (k: T) => void : never) extends (k: infer I) => void ? I : never
+type PairArrayToObject<T extends readonly (readonly [string|symbol,unknown])[]> = UnionToIntersection<PairToObject<T[number]>>
+
+/* Usage */
+const fruitTuples = [
+    ['apple', 'red'],
+    ['banana', 'yellow'],
+    ['cherry', 'black'],
+] as const;
+const fruitObject = fruitTuples.reduce((accumulator, [key, value]) => ({
+    ...accumulator,
+    [key]: value
+}), {} as PairArrayToObject<typeof fruitTuples>)
+fruitObject // type { apple: "red", banana: "yellow", cherry: "black" }
 ```
