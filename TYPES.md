@@ -153,6 +153,6 @@ const fruitTuples = [
 const fruitObject = fruitTuples.reduce((accumulator, [key, value]) => ({
     ...accumulator,
     [key]: value
-}), {} as Expand<PairArrayToObject<typeof fruitTuples>>)
+}), {} as PairArrayToObject<typeof fruitTuples>)
 fruitObject // type { apple: "red", banana: "yellow", cherry: "black" }
 ```
