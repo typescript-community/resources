@@ -138,6 +138,16 @@ interface Apple {
 type ExplicityAppleKeys = ExplicitKeys<Apple> // 'hello' | 'goodbye'
 ```
 
+## Deep Readonly
+```ts
+export type DeepReadonly<T> = Readonly<{
+    [k in keyof T]:
+        T[k] extends unknown[] ? ReadonlyArray<DeepReadonly<T[k][number]>> :
+        T[k] extends Function ? T[k] :
+        T[k] extends object ? DeepReadonly<T[k]> :
+            T[k];
+}>
+
 ## Pair Array to Object
 ```ts
 type PairToObject<T> = T extends readonly [string, string] ? { [index in T[0]]: T[1] } : never
