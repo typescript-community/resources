@@ -147,6 +147,7 @@ export type DeepReadonly<T> = Readonly<{
         T[k] extends object ? DeepReadonly<T[k]> :
             T[k];
 }>
+```
 
 ## Pair Array to Object
 ```ts
