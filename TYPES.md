@@ -151,8 +151,8 @@ export type DeepReadonly<T> = Readonly<{
 
 ## Pair Array to Object
 ```ts
-type PairToObject<T> = T extends readonly [string, string] ? { [index in T[0]]: T[1] } : never
-type UnionToIntersection<T> = (T extends any ? (k: T) => void : never) extends (k: infer I) => void ? I : never
+type PairToObject<T> = T extends readonly [string|number|symbol, unknown] ? { [index in T[0]]: T[1] } : never
+type UnionToIntersection<T> = (T extends unknown ? (k: T) => void : never) extends (k: infer I) => void ? I : never
 type PairArrayToObject<T extends readonly (readonly [string|symbol,unknown])[]> = UnionToIntersection<PairToObject<T[number]>>
 
 /* Usage */
