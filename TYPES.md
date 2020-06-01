@@ -98,7 +98,7 @@ type StaticProps = ClassStaticProps<typeof A>; // { b: string }
 ## Expand
 A debug type used to expand deep or messy types.
 ```ts
-type Primitive = string | number | boolean | bigint | null | void | symbol
+type Primitive = string | number | boolean | bigint | null | void | symbol | Function
 type Expand<T> = T extends Primitive ? T : { [K in keyof T]: Expand<T[K]> }
 
 /* Usage */
