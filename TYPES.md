@@ -167,3 +167,17 @@ const fruitObject = fruitTuples.reduce((accumulator, [key, value]) => ({
 }), {} as PairArrayToObject<typeof fruitTuples>)
 fruitObject // type { apple: "red", banana: "yellow", cherry: "black" }
 ```
+
+## Filter Object by Value Type
+```ts
+type ExtractObjectKeysByValueType<T extends object, V> = { [Key in keyof T]: T[Key] extends V ? Key : never }[keyof T]
+type FilterObjectByValueType<T extends object, V> = { [Key in ExtractObjectKeysByValueType<T, V>]: T[Key] }
+
+/* Usage */
+interface Apple {
+    color: 'red' | 'green'
+    seeds: number
+    shape: 'sphere'
+}
+type FilteredApple = FilterObjectByValueType<Apple, string> // type: { color: 'red' | 'green', shape: 'sphere' }
+```
