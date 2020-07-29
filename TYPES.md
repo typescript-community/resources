@@ -181,3 +181,13 @@ interface Apple {
 }
 type FilteredApple = FilterObjectByValueType<Apple, string> // type: { color: 'red' | 'green', shape: 'sphere' }
 ```
+
+## Merge a union into a single type with unioned properties
+```ts
+type GetAllKeys<T> = T extends unknown ? keyof T : never
+type GetAllValues<T, K extends string | number | symbol> = T extends object ? K extends keyof T ? T[K] : never : never
+type Merge<T> = { [K in GetAllKeys<T>]: GetAllValues<T, K> }
+
+/* Usage */
+type Apple = Merge<{ a: number, c: 'hello' } | { a: string; b: boolean }> // { a: string | number, b: boolean, c: 'hello' }
+```
