@@ -191,3 +191,15 @@ type Merge<T> = { [K in GetAllKeys<T>]: GetAllValues<T, K> }
 /* Usage */
 type Apple = Merge<{ a: number, c: 'hello' } | { a: string; b: boolean }> // { a: string | number, b: boolean, c: 'hello' }
 ```
+
+## Get `keyof` recursively
+
+```ts
+type Primitive = string | number | boolean | bigint | null | void | symbol | Function
+type RecursiveKeys<T, U extends string = ''> = T extends Primitive ? never : {
+  [K in keyof T & string]: `${U}${K}` | RecursiveKeys<T[K], `${U}${K}.`>
+}[keyof T & string]
+
+type Out = RecursiveKeys<{ a: string, b: { c: number } }>
+//   ^? - type Out = "a" | "b" | "b.c"
+```
