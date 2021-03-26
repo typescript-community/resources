@@ -203,3 +203,22 @@ type RecursiveKeys<T, U extends string = ''> = T extends Primitive ? never : {
 type Out = RecursiveKeys<{ a: string, b: { c: number } }>
 //   ^? - type Out = "a" | "b" | "b.c"
 ```
+
+## Keyed object by property from union
+```ts
+type ToKeyedObject<T, U extends keyof T> = { [Key in T[U] & PropertyKey]: Extract<T, { [_ in U]: Key}> }
+
+/* Usage */
+interface Apple {
+    kind: 'apple'
+}
+interface Banana {
+    kind: 'banana'
+}
+type Fruit = Apple | Banana
+type x = ToKeyedObject<Fruit, 'kind'>;
+//   ^? - type x = {
+//       apple: Apple;
+//       banana: Banana;
+//   }
+```
