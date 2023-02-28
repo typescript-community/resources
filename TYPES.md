@@ -14,7 +14,9 @@ const DecodeBase64 = (B64String: Base64Type): string => Buffer.from(B64String, '
 ```
 
 ## ResolvePromise
-Returns the type T inside of a Promise<T>.
+
+Returns the type `T` inside of a `Promise<T>`.
+
 ```ts
 export type ResolvePromise<T> = T extends PromiseLike<infer R> ? R : never;
 
@@ -221,4 +223,47 @@ type x = ToKeyedObject<Fruit, 'kind'>;
 //       apple: Apple;
 //       banana: Banana;
 //   }
+```
+
+## Type Safe Guard Clauses
+```ts
+// the check function passed to this should return the original value (after narrowing), or undefined (in the case of no match)
+function createGuard<T, U extends T>(check: (maybe: T) => U | undefined): (maybe: T) => maybe is U {
+    return (maybe: T): maybe is U => check(maybe) !== undefined
+}
+
+/* Usage */
+type Apple = { size: 'large', color: 'red' }
+type Banana = { size: 'large', color: 'yellow' }
+type Cherry = { size: 'small', color: 'red' }
+type Fruit = Apple | Banana | Cherry
+
+declare const fruit: Fruit
+
+const isBanana = createGuard((fruit: Fruit) => fruit.color === 'yellow' ? fruit : undefined)
+if (isBanana(fruit)) {
+    fruit
+    // ^? const fruit: Banana
+}
+
+// naive way
+function isCherryUnvalidated(fruit: Fruit): fruit is Cherry { return fruit.color === 'red' }
+if (isCherryUnvalidated(fruit)) {
+    fruit
+    // ^? const fruit: Cherry
+    // Uh oh, we didn't narrow enough but the compiler happily told us we have a Cherry when we could have an Apple!
+}
+// improved way
+const isCherry = createGuard((fruit: Fruit) => fruit.color === 'red' ? fruit : undefined)
+if (isCherry(fruit)) {
+    fruit
+    // ^? const fruit: Apple | Cherry
+    // Since the return type of the guard is inferred, we correctly get the right type even if our function name is wrong
+}
+
+const isApple = createGuard((fruit: Fruit) => fruit.color === 'red' && fruit.size === 'large' ? fruit : undefined)
+if (isApple(fruit)) {
+    fruit
+    // ^? const fruit: Apple
+}
 ```
