@@ -39,7 +39,7 @@ const ClassFactory = <T extends ClassType>(Ctor: T): InstanceType<T> => new Ctor
 Returns a union of the **public** method types on a class.
 ```ts
 export type ClassMethodTypes<T> = {
-    [K in keyof T]: T[K] extends (...args: unknown[]) => void ? T[K] : never;
+    [K in keyof T]: T[K] extends (...args: never[]) => void ? T[K] : never;
 }[keyof T];
 
 /* Usage */
@@ -55,7 +55,7 @@ type MethodTypes = ClassMethodTypes<A>; // (() => void | (param: string) => numb
 Returns a string union of **public** method names on a class.
 ```ts
 export type ClassMethodNames<T> = {
-    [K in keyof T]: T[K] extends (...args: unknown[]) => void ? K : never;
+    [K in keyof T]: T[K] extends (...args: never[]) => void ? K : never;
 }[keyof T];
 
 /* Usage */
