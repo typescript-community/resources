@@ -13,18 +13,6 @@ export type Base64Type = Opaque<string, '__base64__'>;
 const DecodeBase64 = (B64String: Base64Type): string => Buffer.from(B64String, 'base64').toString('utf8');
 ```
 
-## ResolvePromise
-
-Returns the type `T` inside of a `Promise<T>`.
-
-```ts
-export type ResolvePromise<T> = T extends PromiseLike<infer R> ? R : never;
-
-/* Usage */
-const Result = Promise.resolve(0); // Promise<number>
-type TResult = ResolvePromise<typeof Result> //number
-```
-
 ## ClassType
 Represents any class constructor.
 ```ts
